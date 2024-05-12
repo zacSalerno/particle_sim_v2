@@ -3,7 +3,7 @@ use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_rapier2d::prelude::*;
 
 #[derive(Component, Debug)]
-struct Particle;
+pub struct Particle;
 
 #[derive(Component)]
 struct Acceleration {
@@ -54,9 +54,6 @@ fn move_particles(
         for &gravity_point_transform in gravity_points.iter() {
             acceleration.value =
                 gravity_point_transform.translation.xy() - particle_transform.translation.xy();
-            // println!("Acceleration: {}", acceleration.value);
-            // println!("Velocity: {}", velocity.linvel);
-            // println!("Position: {}", particle_transform.translation);
 
             acceleration.value = acceleration.value.clamp_length(0.0, MAX_ACCELERATION);
 

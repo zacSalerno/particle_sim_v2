@@ -12,7 +12,7 @@ impl Plugin for ParticleSpawnerPlugin {
     }
 }
 
-fn spawn_particles(
+pub fn spawn_particles(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
