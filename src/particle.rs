@@ -1,4 +1,4 @@
-use crate::gravity_point::*;
+use crate::{gravity_point::*, MAX_ACCELERATION, MAX_VELOCITY};
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_rapier2d::prelude::*;
 
@@ -35,12 +35,12 @@ pub fn spawn_particle(
             value: Vec2::new(0.0, 0.0),
         })
         .insert(MaterialMesh2dBundle {
-            mesh: meshes.add(Circle::new(1.0)).into(),
+            mesh: meshes.add(Circle::new(3.0)).into(),
             transform: Transform {
                 translation: Vec3::new(position.x, position.y, 0.0),
                 ..Default::default()
             },
-            material: materials.add(Color::hex("#e1c19b").unwrap()),
+            material: materials.add(Color::VIOLET),
             ..default()
         })
         .insert(Particle);
@@ -58,9 +58,9 @@ fn move_particles(
             // println!("Velocity: {}", velocity.linvel);
             // println!("Position: {}", particle_transform.translation);
 
-            acceleration.value = acceleration.value.clamp_length(0.0, 0.5);
+            acceleration.value = acceleration.value.clamp_length(0.0, MAX_ACCELERATION);
 
-            velocity.linvel = velocity.linvel.clamp_length_max(100.0);
+            velocity.linvel = velocity.linvel.clamp_length_max(MAX_VELOCITY);
             velocity.linvel += acceleration.value;
         }
     }

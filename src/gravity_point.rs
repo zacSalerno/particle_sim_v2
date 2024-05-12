@@ -23,7 +23,7 @@ pub fn make_gravity_point(
                 translation: Vec3::new(position.x, position.y, 0.0),
                 ..Default::default()
             },
-            material: materials.add(Color::rgb(0.2, 0.7, 0.2)),
+            material: materials.add(Color::rgb(0.2, 0.9, 0.2)),
             ..default()
         })
         .insert(GravityPoint);

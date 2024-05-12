@@ -1,4 +1,4 @@
-use crate::gravity_point::*;
+use crate::{gravity_point::*, HEIGHT, WIDTH};
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
@@ -29,7 +29,7 @@ fn spawn_gravity_point(
 
 fn cursor_position(q_windows: Query<&Window, With<PrimaryWindow>>) -> Vec2 {
     if let Some(position) = q_windows.single().cursor_position() {
-        return Vec2::new(position.x - 500.0, -position.y + 250.0);
+        return Vec2::new(position.x - (WIDTH / 2.0), -position.y + (HEIGHT / 2.0));
     } else {
         return Vec2::new(0.0, 0.0);
     }

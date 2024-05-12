@@ -1,5 +1,6 @@
 use crate::constants::*;
 use crate::particle::*;
+use crate::PARTICLES_TO_SPAWN;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use rand::Rng;
@@ -18,7 +19,7 @@ fn spawn_particles(
 ) {
     let mut rng = rand::thread_rng();
 
-    for _ in 0..=5000 {
+    for _ in 0..=PARTICLES_TO_SPAWN {
         let rand_position: Vect = Vec2::new(
             rng.gen_range((-WIDTH / 2.0)..=(WIDTH / 2.0)),
             rng.gen_range((-HEIGHT / 2.0)..=(HEIGHT / 2.0)),

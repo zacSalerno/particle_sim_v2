@@ -4,13 +4,16 @@ mod input;
 mod particle;
 mod particle_spawner;
 
-use bevy::{input::InputPlugin, prelude::*};
+use bevy::prelude::*;
+use bevy_fps_counter::{FpsCounter, FpsCounterPlugin};
 use bevy_rapier2d::prelude::*;
 use constants::*;
 use gravity_point::*;
 use input::*;
 use particle::*;
 use particle_spawner::*;
+
+use bevy::core_pipeline::{bloom::BloomSettings, tonemapping::Tonemapping};
 
 fn main() {
     App::new()
@@ -28,6 +31,7 @@ fn main() {
                 })
                 .build(),
         )
+        .add_plugins(FpsCounterPlugin)
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         // .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(ParticlePlugin)
@@ -39,8 +43,24 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, mut rapier_config: ResMut<RapierConfiguration>) {
+fn setup(
+    mut commands: Commands,
+    mut rapier_config: ResMut<RapierConfiguration>,
+    mut diags_state: ResMut<FpsCounter>,
+) {
     rapier_config.gravity = Vect::ZERO;
 
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn((
+        Camera2dBundle {
+            camera: Camera {
+                hdr: true,
+                ..Default::default()
+            },
+            tonemapping: Tonemapping::TonyMcMapface,
+            ..Default::default()
+        },
+        BloomSettings::NATURAL,
+    ));
+
+    diags_state.enable();
 }
