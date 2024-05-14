@@ -40,8 +40,18 @@ fn main() {
         .add_plugins(MyInputPlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, bevy::window::close_on_esc)
+        .add_systems(Update, (acc_text, vel_text, part_text))
         .run();
 }
+
+#[derive(Component)]
+struct AccelerationText;
+
+#[derive(Component)]
+struct VelocityText;
+
+#[derive(Component)]
+struct ParticleText;
 
 fn setup(
     mut commands: Commands,
@@ -63,4 +73,110 @@ fn setup(
     ));
 
     diags_state.enable();
+
+    commands
+        .spawn(
+            TextBundle::from_section(
+                "",
+                TextStyle {
+                    font_size: 30.0,
+                    color: Color::WHITE,
+                    ..default()
+                },
+            )
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(10.0),
+                left: Val::Px(10.0),
+                ..default()
+            }),
+        )
+        .insert(AccelerationText);
+
+    commands
+        .spawn(
+            TextBundle::from_section(
+                "",
+                TextStyle {
+                    font_size: 30.0,
+                    color: Color::WHITE,
+                    ..default()
+                },
+            )
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(35.0),
+                left: Val::Px(10.0),
+                ..default()
+            }),
+        )
+        .insert(VelocityText);
+
+    commands
+        .spawn(
+            TextBundle::from_section(
+                "",
+                TextStyle {
+                    font_size: 30.0,
+                    color: Color::WHITE,
+                    ..default()
+                },
+            )
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(60.0),
+                left: Val::Px(10.0),
+                ..default()
+            }),
+        )
+        .insert(ParticleText);
+    commands.spawn(
+        TextBundle::from_section(
+            "Press (R) to reset",
+            TextStyle {
+                font_size: 30.0,
+                color: Color::WHITE,
+                ..default()
+            },
+        )
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            bottom: Val::Px(85.0),
+            left: Val::Px(10.0),
+            ..default()
+        }),
+    );
+}
+
+fn acc_text(mut acceleration_text: Query<&mut Text, With<AccelerationText>>) {
+    let mut acceleration_text = acceleration_text.single_mut();
+
+    unsafe {
+        acceleration_text.sections[0].value = format!(
+            "(W/S)Max Acceleration:{}",
+            MAX_ACCELERATION.round().to_string()
+        );
+    }
+}
+
+fn vel_text(mut velocity_text: Query<&mut Text, With<VelocityText>>) {
+    let mut velocity_text = velocity_text.single_mut();
+    unsafe {
+        velocity_text.sections[0].value =
+            format!("(A/D)Max Velocity:{}", MAX_VELOCITY.round().to_string());
+    }
+}
+
+fn part_text(
+    mut particle_text: Query<&mut Text, With<ParticleText>>,
+    particles: Query<Entity, With<Particle>>,
+) {
+    let mut particle_text = particle_text.single_mut();
+
+    let mut particles_list: Vec<Entity> = Vec::new();
+    for particle in &particles {
+        particles_list.push(particle)
+    }
+    particle_text.sections[0].value =
+        format!("(Q/E)Particles:{}", particles_list.len().to_string());
 }

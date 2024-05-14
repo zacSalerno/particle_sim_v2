@@ -1,5 +1,9 @@
 pub const WIDTH: f32 = 1840.0;
 pub const HEIGHT: f32 = 1000.0;
 pub const PARTICLES_TO_SPAWN: u32 = 10000;
-pub const MAX_ACCELERATION: f32 = 10.0;
-pub const MAX_VELOCITY: f32 = 1500.0;
+pub const OG_MAX_ACCELERATION: f32 = 10.0;
+pub const OG_MAX_VELOCITY: f32 = 1500.0;
+pub static mut MAX_ACCELERATION: f32 = 10.0;
+pub static mut MAX_VELOCITY: f32 = 1500.0;
+pub const MAX_VELOCITY_CHANGE_RATE: f32 = 50.0;
+pub const MAX_ACCELERATION_CHANGE_RATE: f32 = 0.2;

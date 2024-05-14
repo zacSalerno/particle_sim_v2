@@ -6,7 +6,7 @@ use bevy_rapier2d::prelude::*;
 pub struct Particle;
 
 #[derive(Component)]
-struct Acceleration {
+pub struct Acceleration {
     value: Vect,
 }
 
@@ -46,19 +46,22 @@ pub fn spawn_particle(
         .insert(Particle);
 }
 
-fn move_particles(
+pub fn move_particles(
     mut particles: Query<(&mut Velocity, &mut Acceleration, &Transform), With<Particle>>,
     gravity_points: Query<&Transform, With<GravityPoint>>,
+    time: Res<Time>,
 ) {
     for (mut velocity, mut acceleration, particle_transform) in particles.iter_mut() {
         for &gravity_point_transform in gravity_points.iter() {
-            acceleration.value =
-                gravity_point_transform.translation.xy() - particle_transform.translation.xy();
+            unsafe {
+                acceleration.value =
+                    gravity_point_transform.translation.xy() - particle_transform.translation.xy();
 
-            acceleration.value = acceleration.value.clamp_length(0.0, MAX_ACCELERATION);
+                acceleration.value = acceleration.value.clamp_length(0.0, MAX_ACCELERATION);
 
-            velocity.linvel = velocity.linvel.clamp_length_max(MAX_VELOCITY);
-            velocity.linvel += acceleration.value;
+                velocity.linvel = velocity.linvel.clamp_length_max(MAX_VELOCITY);
+                velocity.linvel += acceleration.value * (time.delta_seconds() + 1.5);
+            }
         }
     }
 }
